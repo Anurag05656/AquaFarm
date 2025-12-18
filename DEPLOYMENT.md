@@ -29,7 +29,7 @@
    - Select `backend` folder as root directory
    - Add environment variables:
      ```
-     MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/water
+     MONGODB_URI=****************
      JWT_SECRET=your_jwt_secret_key_here
      WEATHER_API_KEY=your_openweathermap_api_key
      SESSION_SECRET=your_session_secret
