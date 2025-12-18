@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import session from 'express-session';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -13,10 +14,15 @@ import waterRoutes from './routes/waterRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 
-// Connect to database
-connectDB();
-
 const app = express();
+
+// Database connection middleware
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+  }
+  next();
+});
 
 // Security middleware
 app.use((req, res, next) => {
@@ -69,6 +75,10 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;
