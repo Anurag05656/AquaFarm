@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import Field from '../models/Field.js';
+import WaterUsage from '../models/WaterUsage.js';
+import Notification from '../models/Notification.js';
 import { createNotification } from './notificationController.js';
 
 // Generate JWT
@@ -187,6 +190,27 @@ export const updateUserProfile = async (req, res) => {
     } else {
       res.status(404).json({ message: 'User not found' });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// @desc    Delete user account
+// @route   DELETE /api/auth/account
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    
+    // Delete all user-related data
+    await Promise.all([
+      Field.deleteMany({ user: userId }),
+      WaterUsage.deleteMany({ user: userId }),
+      Notification.deleteMany({ user: userId }),
+      User.findByIdAndDelete(userId)
+    ]);
+    
+    res.json({ message: 'Account deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });

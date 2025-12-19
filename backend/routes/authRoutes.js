@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { registerUser, loginUser, getUserProfile, updateUserProfile } from '../controllers/authController.js';
+import { registerUser, loginUser, getUserProfile, updateUserProfile, deleteAccount } from '../controllers/authController.js';
 import protect from '../middleware/auth.js';
 
 const router = express.Router();
@@ -10,6 +10,7 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.get('/profile', protect, getUserProfile);
 router.put('/profile', protect, updateUserProfile);
+router.delete('/account', protect, deleteAccount);
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 

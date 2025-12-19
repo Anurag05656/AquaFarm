@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 
 const Settings = () => {
-  const { user, updateProfile, logout } = useAuth();
+  const { user, updateProfile, logout, deleteAccount } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -801,9 +801,14 @@ const Settings = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    // In a real app, you would call an API to delete the account
-                    logout();
+                  onClick={async () => {
+                    try {
+                      await deleteAccount();
+                      setShowDeleteModal(false);
+                    } catch (error) {
+                      setError(error.response?.data?.message || 'Failed to delete account');
+                      setShowDeleteModal(false);
+                    }
                   }}
                   className="btn bg-red-600 text-white hover:bg-red-700 flex-1"
                 >
