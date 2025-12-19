@@ -2,8 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
-import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -15,15 +13,10 @@ import waterRoutes from './routes/waterRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 
-const app = express();
+// Connect to database
+connectDB();
 
-// Database connection middleware
-app.use(async (req, res, next) => {
-  if (mongoose.connection.readyState !== 1) {
-    await connectDB();
-  }
-  next();
-});
+const app = express();
 
 // Security middleware
 app.use((req, res, next) => {
@@ -51,10 +44,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'session-secret',
   resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI
-  })
+  saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -77,12 +67,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Something went wrong!', error: err.message });
 });
 
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
