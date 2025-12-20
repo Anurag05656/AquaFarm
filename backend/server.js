@@ -19,6 +19,8 @@ connectDB();
 
 const app = express();
 
+
+
 // Security middleware
 app.use((req, res, next) => {
   // Security headers
@@ -50,6 +52,8 @@ app.use(session({
     mongoUrl: process.env.MONGODB_URI
   })
 }));
+
+app.set('trust proxy', 1);
 app.use(passport.initialize());
 app.use(passport.session());
 
