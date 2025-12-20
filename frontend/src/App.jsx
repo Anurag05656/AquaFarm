@@ -3,7 +3,6 @@ import { useAuth } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import AuthCallback from './pages/AuthCallback';
 import Dashboard from './pages/Dashboard';
 import Fields from './pages/Fields';
 import WaterUsage from './pages/WaterUsage';
@@ -72,7 +71,7 @@ function App() {
             <Register />
           </PublicRoute>
         } />
-        <Route path="/auth/callback" element={<AuthCallback />} />
+
         
         {/* Protected Routes */}
         <Route path="/dashboard" element={

@@ -16,16 +16,9 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    required: [true, 'Please add a password'],
     minlength: 6,
     select: false
-  },
-  googleId: {
-    type: String,
-    sparse: true
-  },
-  avatar: {
-    type: String,
-    default: ''
   },
   farmName: {
     type: String,
@@ -46,7 +39,7 @@ const userSchema = new mongoose.Schema({
 
 // Encrypt password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password') || !this.password) {
+  if (!this.isModified('password')) {
     return next();
   }
   
@@ -61,9 +54,6 @@ userSchema.pre('save', async function(next) {
 
 // Match password
 userSchema.methods.matchPassword = async function(enteredPassword) {
-  if (!this.password) {
-    return false;
-  }
   return await bcrypt.compare(enteredPassword, this.password);
 };
 

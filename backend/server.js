@@ -1,13 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
 
 dotenv.config();
 
 import connectDB from './config/db.js';
-import passport from './config/passport.js';
 import authRoutes from './routes/authRoutes.js';
 import fieldRoutes from './routes/fieldRoutes.js';
 import waterRoutes from './routes/waterRoutes.js';
@@ -18,8 +15,6 @@ import notificationRoutes from './routes/notificationRoutes.js';
 connectDB();
 
 const app = express();
-
-
 
 // Security middleware
 app.use((req, res, next) => {
@@ -44,18 +39,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'session-secret',
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI
-  })
-}));
 
 app.set('trust proxy', 1);
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Routes
 app.use('/api/auth', authRoutes);

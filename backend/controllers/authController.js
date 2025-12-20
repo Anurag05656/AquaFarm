@@ -151,11 +151,6 @@ export const updateUserProfile = async (req, res) => {
     if (user) {
       // If changing password, verify current password first
       if (req.body.password) {
-        // Check if user has a password (not Google OAuth user)
-        if (!user.password) {
-          return res.status(400).json({ message: 'Cannot set password for Google OAuth accounts' });
-        }
-        
         if (!req.body.currentPassword || req.body.currentPassword.trim() === '') {
           return res.status(400).json({ message: 'Current password is required to change password' });
         }

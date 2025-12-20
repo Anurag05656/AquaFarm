@@ -1,0 +1,37 @@
+BACKEND ROUTES AND ACTIONS
+
+=== AUTH ROUTES (/api/auth) ===
+POST /api/auth/register
+POST /api/auth/login
+GET /api/auth/profile
+PUT /api/auth/profile
+DELETE /api/auth/account
+GET /api/auth/google
+GET /api/auth/google/callback
+
+=== FIELD ROUTES (/api/fields) ===
+GET /api/fields/
+POST /api/fields/
+PUT /api/fields/:id
+DELETE /api/fields/:id
+
+=== WATER ROUTES (/api/water) ===
+GET /api/water/
+POST /api/water/
+GET /api/water/stats
+DELETE /api/water/:id
+
+=== WEATHER ROUTES (/api/weather) ===
+GET /api/weather/current
+GET /api/weather/forecast
+GET /api/weather/recommendations
+
+=== NOTIFICATION ROUTES (/api/notifications) ===
+GET /api/notifications/
+POST /api/notifications/
+PUT /api/notifications/:id/read
+PUT /api/notifications/read-all
+DELETE /api/notifications/:id
+
+=== HEALTH CHECK ===
+GET /api/health
