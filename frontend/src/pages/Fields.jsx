@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   MapPin,
   Plus,
@@ -17,6 +18,8 @@ const Fields = () => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [fieldToDelete, setFieldToDelete] = useState(null);
   const [editingField, setEditingField] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -141,8 +144,6 @@ const Fields = () => {
   };
 
   const handleDelete = async (fieldId) => {
-    if (!window.confirm('Are you sure you want to delete this field?')) return;
-
     try {
       await api.delete(`/fields/${fieldId}`);
       setSuccess('Field deleted successfully');
@@ -154,6 +155,11 @@ const Fields = () => {
       setFields(updated);
       setSuccess('Field deleted (offline)');
     }
+  };
+
+  const confirmDelete = (field) => {
+    setFieldToDelete(field);
+    setShowDeleteDialog(true);
   };
 
   const closeModal = () => {
@@ -255,7 +261,7 @@ const Fields = () => {
                       <Edit2 className="w-4 h-4 text-white" />
                     </button>
                     <button
-                      onClick={() => handleDelete(field._id)}
+                      onClick={() => confirmDelete(field)}
                       className="p-2 bg-white/20 rounded-lg hover:bg-red-500/50 transition-colors"
                     >
                       <Trash2 className="w-4 h-4 text-white" />
@@ -453,6 +459,17 @@ const Fields = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={() => handleDelete(fieldToDelete?._id)}
+        title="Delete Field"
+        message={`Are you sure you want to delete "${fieldToDelete?.name}"? This action cannot be undone and will also remove all associated water usage records.`}
+        confirmText="Delete Field"
+        type="danger"
+      />
     </div>
   );
 };

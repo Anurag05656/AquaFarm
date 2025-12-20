@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   Droplets,
   Plus,
@@ -32,6 +33,8 @@ const WaterUsage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [recordToDelete, setRecordToDelete] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [filterField, setFilterField] = useState('');
@@ -127,8 +130,6 @@ const WaterUsage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this record?')) return;
-
     try {
       await api.delete(`/water/${id}`);
       setSuccess('Record deleted successfully');
@@ -140,6 +141,11 @@ const WaterUsage = () => {
       setRecords(updated);
       setSuccess('Record deleted (offline)');
     }
+  };
+
+  const confirmDelete = (record) => {
+    setRecordToDelete(record);
+    setShowDeleteDialog(true);
   };
 
   const closeModal = () => {
@@ -453,7 +459,7 @@ const WaterUsage = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right">
                             <button
-                              onClick={() => handleDelete(record._id)}
+                              onClick={() => confirmDelete(record)}
                               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -649,6 +655,17 @@ const WaterUsage = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={() => handleDelete(recordToDelete?._id)}
+        title="Delete Water Usage Record"
+        message={`Are you sure you want to delete this water usage record for ${recordToDelete?.field?.name || 'Unknown Field'} on ${recordToDelete ? new Date(recordToDelete.date).toLocaleDateString() : ''}?`}
+        confirmText="Delete Record"
+        type="danger"
+      />
     </div>
   );
 };
