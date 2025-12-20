@@ -100,22 +100,6 @@ VITE_API_BASE_URL=https://your-backend.vercel.app
 
 ---
 
-## Update Google OAuth (if using)
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Select your project
-3. Go to Credentials
-4. Edit OAuth 2.0 Client ID
-5. Add authorized redirect URIs:
-   ```
-   https://your-backend.vercel.app/api/auth/google/callback
-   ```
-6. Add authorized JavaScript origins:
-   ```
-   https://your-frontend.vercel.app
-   ```
-
----
 
 ## Post-Deployment
 
